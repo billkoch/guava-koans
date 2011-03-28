@@ -1,5 +1,7 @@
 package com.karbonsoftware.guava.koans;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -13,17 +15,53 @@ import com.google.common.collect.ImmutableMap;
 public class AboutImmutableCollections {
 
 	@Test
+	public void creatingAListWithBareJavaApisIsPainful() {
+		List<String> names = new ArrayList<String>();
+		names.add("George");
+		names.add("Tom");
+		names.add("Barbara");
+		names.add("Clyde");
+
+		Assert.assertEquals(4, names.size());
+		Assert.assertTrue(names.contains("George"));
+		Assert.assertTrue(names.contains("Tom"));
+		Assert.assertTrue(names.contains("Barbara"));
+		Assert.assertTrue(names.contains("Clyde"));
+	}
+
+	@Test
 	public void creatingAnImmutableListOfElements() {
+		// ZOMG! How much better is this than the code above!?
 		List<String> names = ImmutableList.of("George", "Tom", "Barbara", "Clyde");
 
 		Assert.assertEquals(4, names.size());
+		Assert.assertTrue(names.contains("George"));
+		Assert.assertTrue(names.contains("Tom"));
+		Assert.assertTrue(names.contains("Barbara"));
+		Assert.assertTrue(names.contains("Clyde"));
+	}
 
-		/*
-		 * ZOMG! How much better is this than:
-		 * 
-		 * List<String> names = new ArrayList<String>(); names.add("George");
-		 * names.add("Tom"); names.add("Barbara"); names.add("Clyde");
-		 */
+	@Test
+	public void whyTheCollectionsApiFallsShortOfCreatingUnmodifiableCollections() {
+		List<String> names = new ArrayList<String>();
+		names.add("George");
+		names.add("Tom");
+		names.add("Barbara");
+		names.add("Clyde");
+
+		List<String> unmodifiableNames = Collections.unmodifiableList(names);
+
+		Assert.assertEquals(4, names.size());
+		Assert.assertEquals(4, unmodifiableNames.size());
+
+		names.add("I can circumvent the unmodifiable List by changing the source List.");
+
+		Assert.assertEquals(5, names.size());
+		Assert.assertEquals(5, unmodifiableNames.size());
+		Assert.assertTrue(unmodifiableNames.contains("I can circumvent the unmodifiable List by changing the source List."));
+
+		// NOTE: This problem exists for _ANY_ of the
+		// Collections.unmodifiable*() methods.
 	}
 
 	@Test(expected = UnsupportedOperationException.class)
