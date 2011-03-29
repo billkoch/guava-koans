@@ -79,6 +79,27 @@ public class AboutImmutableCollections {
 		Assert.assertEquals("Springfield", statesToCapitals.get("Illinois"));
 	}
 
+	@Test
+	public void buildersLetYouCreateMapsOfUnlimtedSize() {
+		/*
+		 * This won't compile because the of() method on ImmutableMap does not
+		 * use varargs:
+		 * 
+		 * Map<String, String> statesToCapitals = ImmutableMap.of("Ohio",
+		 * "Columbus", "Pennsylvania", "Harrisburg", "Illinois", "Springfield",
+		 * "Texas", "Austin", "Michigan", "Lansing", "Oregon", "Salem");
+		 */
+
+		// Builders are helpful here:
+		ImmutableMap<String, String> statesToCapitals = new ImmutableMap.Builder<String, String>().put("Ohio", "Columbus")
+				.put("Pennsylvania", "Harrisburg").put("Illinois", "Springfield").put("Texas", "Austin").put("Michigan", "Lansing")
+				.put("Oregon", "Salem").build();
+
+		Assert.assertEquals("Columbus", statesToCapitals.get("Ohio"));
+		Assert.assertEquals("Harrisburg", statesToCapitals.get("Pennsylvania"));
+		Assert.assertEquals("Springfield", statesToCapitals.get("Illinois"));
+	}
+
 	@Test(expected = UnsupportedOperationException.class)
 	public void tryingToModifyAnImmutableMapResultsInAnException() {
 		Map<String, String> statesToCapitals = ImmutableMap.of("Ohio", "Columbus", "Pennsylvania", "Harrisburg", "Illinois", "Springfield");
